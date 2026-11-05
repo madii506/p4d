@@ -125,9 +125,10 @@ async function buildPad(req) {
   if (web && !/^https?:\/\//.test(web)) throw new Error('the website must be a https:// link');
   const feePct = +b.feePct, creatorFeePct = +(b.creatorFeePct || 0);
   if (!(feePct >= 0 && feePct <= MAX_FEE_PCT)) throw new Error(`pick a pad fee between 0% and ${MAX_FEE_PCT}%`);
-  if (!(creatorFeePct >= 0 && creatorFeePct <= 1)) throw new Error('pick a creator fee between 0% and 1%');
-  const burn = Math.round(+b.lp?.burn * 1e4), creator = Math.round(+b.lp?.creator * 1e4); const platform = PPM - burn - creator;
-  if (!(burn >= 0 && creator >= 0 && platform >= 0)) throw new Error('the LP split must add up to 100%');
+  if (!(creatorFeePct >= 0 && creatorFeePct <= 0.5)) throw new Error('pick a creator fee between 0% and 0.5%');
+  // LaunchLab rule (checked on mainnet): the LP at graduation is split between burned and kept by the pad; the creator's share must be 0
+  const burn = Math.round(Math.max(0, Math.min(100, +(b.lp && b.lp.burn))) * 1e4), creator = 0, platform = PPM - burn;
+  if (!Number.isFinite(burn)) throw new Error('pick how much of the LP is burned');
   const id = padIdOf(wallet); const existing = await conn.getAccountInfo(id);
   if (existing) throw new Error(`this wallet already has a pad (${id.toBase58()}). one pad per wallet.`);
   const { ray } = await chain(); if (!ray) throw new Error('could not read Raydium’s platform settings');
