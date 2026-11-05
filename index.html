@@ -11,7 +11,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon.png"><link rel="apple-touch-icon" href="/assets/icon.png">
 <link rel="preload" href="/assets/f/interd-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css?v=3">
+<link rel="preload" href="/assets/f/vt323.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="modulepreload" href="/assets/js/pc3d.js?v=4"><link rel="modulepreload" href="/assets/js/vendor/three.module.min.js"><link rel="modulepreload" href="/assets/js/sound.js?v=4">
+<link rel="stylesheet" href="/assets/style.css?v=4">
 </head>
 <body class="booting">
 
@@ -42,7 +44,6 @@
     <a class="down" href="#why" aria-label="scroll"><span></span></a>
   </section>
 
-  <div class="ticker" aria-hidden="true"><div class="tk" id="tk"></div></div>
 
   <section id="why" class="band">
     <div class="wrap">
@@ -152,7 +153,7 @@
           <button type="submit" class="btn wide" id="lBtn" disabled>connect a wallet to launch</button>
           <div class="lstat" id="lStat" role="status"></div>
         </form>
-        <div class="pv rv"><div class="padcard" id="lPadCard"><div class="empty">paste a pad address or open a p4d link.</div></div><div class="ccoins" id="lCoins"></div></div>
+        <div class="pv rv"><div class="coinprev" id="cPrev"></div><div class="padcard" id="lPadCard"><div class="empty">paste a pad address or open a p4d link.</div></div><div class="ccoins" id="lCoins"></div></div>
       </div>
     </div>
   </section>
@@ -206,11 +207,9 @@
 <div id="toast" role="status"></div>
 <nav id="rail" aria-label="sections"><a href="#top" data-l="top"><i></i></a><a href="#why" data-l="why"><i></i></a><a href="#how" data-l="how"><i></i></a><a href="#build" data-l="build"><i></i></a><a href="#earn" data-l="earn"><i></i></a><a href="#launch" data-l="launch"><i></i></a><a href="#mine" data-l="my pad"><i></i></a><a href="#pads" data-l="pads"><i></i></a><a href="#term" data-l="terminal"><i></i></a><a href="#faq" data-l="faq"><i></i></a></nav>
 <div id="cur" aria-hidden="true"></div>
-<script src="/assets/js/web3.min.js"></script>
-<script src="/assets/js/app.js?v=3"></script>
 <script type="module">
-import { playIntro, heroPC } from '/assets/js/pc3d.js?v=3';
-import { sound } from '/assets/js/sound.js?v=3';
+import { playIntro, heroPC } from '/assets/js/pc3d.js?v=4';
+import { sound } from '/assets/js/sound.js?v=4';
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro');
 const reveal = () => { intro.classList.add('open'); document.body.classList.remove('booting'); setTimeout(() => document.body.classList.add('ready'), 300); };
 const done = () => { intro.classList.add('gone'); sound.settle(); window.P4D && window.P4D.startHero && window.P4D.startHero(); };
@@ -227,5 +226,8 @@ else { let I = null; try { I = playIntro(document.getElementById('introC'), { on
     document.getElementById('skip').addEventListener('click', () => I.skip());
     addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') I.skip(); }); } }
 </script>
+<script src="/assets/js/web3.min.js" defer></script>
+<script src="/assets/js/app.js?v=4" defer></script>
+
 </body>
 </html>
