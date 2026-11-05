@@ -7,6 +7,7 @@ const S = { sol: null, st: null, wallet: null, provider: null, mine: null, coins
   pad: { name: '', img: '', web: '', fee: 1, cfee: .05, burn: 100 } };
 const trim = x => x.replace(/\.0+$|(\.\d*?)0+$/, '$1');
 const fmtN = n => n >= 1e9 ? trim((n / 1e9).toFixed(2)) + 'B' : n >= 1e6 ? trim((n / 1e6).toFixed(2)) + 'M' : n >= 1e3 ? trim((n / 1e3).toFixed(1)) + 'K' : trim(n.toFixed(n >= 100 ? 0 : 2));
+const set$ = (sel, v) => { const el = $(sel); if (el) el.textContent = v; };
 const usd = sol => S.sol ? '$' + fmtN(sol * S.sol) : fmtN(sol) + ' SOL';
 const solf = n => (n >= 1000 ? Math.round(n).toLocaleString('en-US') : n >= 10 ? n.toFixed(1) : n.toFixed(3)) + ' SOL';
 const short = a => a ? a.slice(0, 4) + '…' + a.slice(-4) : '';
@@ -22,7 +23,9 @@ window.P4D = Object.assign(window.P4D || {}, {
 const nav = $('#nav'), prog = $('#prog');
 addEventListener('scroll', () => { const h = document.documentElement, m = h.scrollHeight - h.clientHeight; prog.style.transform = `scaleX(${m > 0 ? h.scrollTop / m : 0})`; nav.classList.toggle('solid', h.scrollTop > 30); how(); }, { passive: true });
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
-$$('.rv').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 70 + 'ms'; io.observe(el); });
+// windows open from a thin line (clip-path), so they need a threshold of 0 to be seen at all
+const io0 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io0.unobserve(e.target); } }), { threshold: 0, rootMargin: '0px 0px -6% 0px' });
+$$('.rv').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 70 + 'ms'; (el.classList.contains('win') ? io0 : io).observe(el); });
 $$('h2').forEach(h => { h.classList.add('split'); h.innerHTML = h.innerHTML.split(/(\s+)/).map(w => /^\s+$/.test(w) ? w : `<span class="w"><span>${w}</span></span>`).join(''); h.querySelectorAll('.w>span').forEach((s, i) => s.style.transitionDelay = (i * 55) + 'ms'); });
 $$('.kicker').forEach(k => io.observe(k));
 const links = $$('#nav nav a'); const lio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-45% 0px -50% 0px' });
@@ -118,7 +121,9 @@ wiz.addEventListener('submit', async e => {
 // ---------------------------------------------------------------- earnings calculator
 const volOf = k => k <= 0 ? 0 : 10 * Math.pow(100000 / 10, k / 1000);   // 10 SOL to 100K SOL a day, log scale
 function earn() { const v = volOf(+$('#vol').value), f = +$('#fee2').value / 100; $('#vVol').textContent = solf(v) + (S.sol ? ` (${usd(v)})` : ''); $('#vFee2').textContent = (+$('#fee2').value).toFixed(2) + '%';
-  const d = v * f; $('#eDay').textContent = solf(d); $('#eMonth').textContent = solf(d * 30); $('#eYear').textContent = solf(d * 365); }
+  const d = v * f; roll('#eDay', d); roll('#eMonth', d * 30); roll('#eYear', d * 365); }
+function roll(sel, to) { const el = $(sel); if (!el) return; const from = +el.dataset.v || 0; el.dataset.v = to; if (RM || Math.abs(to - from) < 1e-9) { el.textContent = solf(to); return; }
+  cancelAnimationFrame(el._r); const t0 = performance.now(), D = 520; const st = now => { const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3); el.textContent = solf(from + (to - from) * e); if (k < 1) el._r = requestAnimationFrame(st); }; el._r = requestAnimationFrame(st); }
 ['#vol', '#fee2'].forEach(s => $(s).addEventListener('input', earn));
 
 // ---------------------------------------------------------------- launch on a pad
@@ -165,16 +170,16 @@ async function loadMine() {
 // ---------------------------------------------------------------- pads directory
 async function loadPads() {
   const g = $('#pgrid');
-  try { const { pads } = await api('pads'); $('#sMine').textContent = pads.length;
+  try { const { pads } = await api('pads'); set$('#sMine', pads.length);
     g.innerHTML = pads.length ? pads.map(p => `<a class="padcard" href="/?pad=${p.id}#launch" data-pad="${p.id}">${padCard(p)}</a>`).join('') : '<div class="empty">no pads made on p4d yet. yours can be the first.</div>';
     $$('#pgrid a[data-pad]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); history.replaceState(null, '', '/?pad=' + a.dataset.pad + '#launch'); openPad(a.dataset.pad, true); }));
-  } catch (e) { g.innerHTML = `<div class="empty">couldn't read the chain right now (${esc(e.message)}).</div>`; $('#sMine').textContent = '—'; }
+  } catch (e) { g.innerHTML = `<div class="empty">couldn't read the chain right now (${esc(e.message)}).</div>`; set$('#sMine', '—'); }
 }
 
 // ---------------------------------------------------------------- live status
 const statusP = api('status').then(s => { S.st = s; S.sol = s.solUsd;
-  $('#sSol').textContent = s.solUsd ? '$' + s.solUsd.toFixed(2) : '—'; $('#sPads').textContent = s.platforms ? s.platforms.toLocaleString('en-US') : '—'; if (s.platforms) { $('#pTotal').textContent = s.platforms.toLocaleString('en-US'); $('#pTotalL').hidden = false; }
-  earn(); review(); ticker(); return s; }).catch(() => { $('#sPads').textContent = 'offline'; return null; });
+  set$('#sSol', s.solUsd ? '$' + s.solUsd.toFixed(2) : '—'); set$('#sPads', s.platforms ? s.platforms.toLocaleString('en-US') : '—'); if (s.platforms) { $('#pTotal').textContent = s.platforms.toLocaleString('en-US'); $('#pTotalL').hidden = false; }
+  earn(); review(); ticker(); return s; }).catch(() => { set$('#sPads', 'offline'); return null; });
 function ticker() { const it = [['get your own p4d', ''], ['make a launchpad on Raydium', ''], [S.st && S.st.platforms ? S.st.platforms.toLocaleString('en-US') : 'thousands of', 'LaunchLab pads live'], ['your fee: 0–5% per trade', ''], ['graduates into a Raydium pool', ''], ['one transaction from your wallet', ''], ['type / for the terminal', '']];
   const h = it.map(([a, b]) => `<span><b>${a}</b>${b ? ` <i>${b}</i>` : ''}</span><span>·</span>`).join(''); $('#tk').innerHTML = h + h; }
 ticker();
@@ -227,6 +232,33 @@ $('#tChips').innerHTML = ['help', 'name my pad', 'fee 1.5', 'burn 80', 'pad', 'e
 $$('#tChips button').forEach(b => b.addEventListener('click', () => run(b.textContent)));
 P(`<span class="w">P4D 98</span> <span class="m">· type</span> <span class="c">help</span> <span class="m">· ↑↓ history · tab completes</span>`);
 (() => { const f = $('#tFab'); const o = new IntersectionObserver(es => f.classList.toggle('away', es.some(e => e.isIntersecting)), { threshold: .05 }); ['#faq', '.foot'].forEach(s => $(s) && o.observe($(s))); })();
+
+// ---------------------------------------------------------------- v2 motion: big section letters, scroll bands, a cursor light, the essay lighting up
+(() => {
+  const GLY = '▓▒░#%&@$*+=/\\<>01';
+  $$('.bigk').forEach(b => { const w = b.querySelector('.bw'), word = w.textContent; w.setAttribute('aria-label', word);
+    w.innerHTML = [...word].map((c, i) => `<span class="ch" style="transition-delay:${i * 45}ms">${c === ' ' ? '&nbsp;' : esc(c)}</span>`).join('');
+    const chs = [...w.querySelectorAll('.ch')];
+    const scramble = () => { if (RM) return; chs.forEach((ch, i) => { const real = word[i]; if (real === ' ') return; let n = 0; const max = 6 + i * 2;
+      const it = setInterval(() => { ch.textContent = ++n >= max ? real : GLY[Math.floor(Math.random() * GLY.length)]; if (n >= max) clearInterval(it); }, 42); }); };
+    const o = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { b.classList.add('in'); scramble(); o.unobserve(b); } }), { threshold: .4 }); o.observe(b);
+    if (HOVER) b.parentElement.addEventListener('pointerenter', () => { if (b.classList.contains('in')) scramble(); });
+  });
+  // the essay: each word lights up as it passes the middle of the screen
+  const words = []; $$('.essay p').forEach(p => { p.innerHTML = p.textContent.split(/(\s+)/).map(w => /^\s+$/.test(w) ? w : `<span class="wd">${esc(w)}</span>`).join(''); words.push(...p.querySelectorAll('.wd')); });
+  // the scroll bands and the big letters drift sideways with the scroll
+  const mqs = $$('.mqi').map(m => { m.innerHTML = m.innerHTML.repeat(4); return { m, x: 0 }; }), bigs = $$('.bigk .bw');
+  let lastY = scrollY, v = 0; let wins = $$('.win.rv');
+  const tick = now => { requestAnimationFrame(tick); const y = scrollY, dy = y - lastY; lastY = y; v += (dy - v) * .1; const vh = innerHeight;
+    for (const q of mqs) { const r = q.m.parentElement.getBoundingClientRect(); if (r.bottom < -50 || r.top > vh + 50) continue; q.x -= .45 + Math.abs(v) * .35; const half = q.m.scrollWidth / 2; if (-q.x > half) q.x += half; q.m.style.transform = `translate3d(${q.x}px,0,0) skewX(${Math.max(-8, Math.min(8, -v * .4))}deg)`; }
+    if (!RM) for (const b of bigs) { const r = b.getBoundingClientRect(); if (r.bottom < -100 || r.top > vh + 100) continue; const k = (r.top + r.height / 2 - vh / 2) / vh; b.style.transform = `translate3d(${(k * -60).toFixed(1)}px,0,0)`; }
+    for (const w of words) { const r = w.getBoundingClientRect(); w.classList.toggle('lit', RM || r.top < vh * .72); }
+    if (wins.length) wins = wins.filter(w => { if (w.classList.contains('in')) return false; const r = w.getBoundingClientRect(); if (r.top < vh * .9 && r.bottom > 0) { w.classList.add('in'); return false; } return true; });
+  };
+  requestAnimationFrame(tick);
+  // a light that follows the cursor across cards and windows
+  if (HOVER) $$('.dcard, .win, .padcard').forEach(el => el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px'); }, { passive: true }));
+})();
 
 // ---------------------------------------------------------------- go
 syncPad(); setStep(0); earn(); how(); loadPads();
