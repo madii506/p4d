@@ -429,3 +429,93 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border:0;border-radiu
 .tagc{font:600 12px JB;color:var(--c);letter-spacing:.1em;text-transform:uppercase}
 .tps{font:400 22px VT,JB}.tin input{font:400 21px VT,JB}.tout{font:400 20px/1.3 VT,JB,monospace}
 @media (max-width:900px){.hgrid,.hw,.bgrid,.lgrid,.calc,.dgrid,.duo{grid-template-columns:1fr}.essay{columns:1}.stick{display:none}.steps{padding:30px 0}.step{min-height:auto;padding:30px 0;opacity:1;border-top:1px solid var(--line)}.earn{grid-template-columns:1fr}.pv{position:static}.two,.review{grid-template-columns:1fr}.hero{padding-top:90px}}
+
+/* ================================================================ v2: gate, transparent PC, big section letters, more motion */
+/* the boot gate: nothing plays until you press boot (browsers only allow sound after a click) */
+#intro .gate{position:absolute;inset:0;z-index:3;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 44%,rgba(8,52,58,.55),rgba(3,15,17,.92) 62%),#030f11;cursor:pointer;transition:opacity .8s var(--ease),transform .9s var(--ease)}
+#intro .gate.go{opacity:0;transform:scale(1.06);pointer-events:none}
+#intro .gin{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:24px;cursor:default}
+.gpc{width:min(220px,46vw);height:auto;filter:drop-shadow(0 0 40px rgba(95,245,228,.28)) drop-shadow(0 30px 40px rgba(0,0,0,.6));animation:gfloat 5s ease-in-out infinite;margin-bottom:6px}
+@keyframes gfloat{50%{transform:translateY(-10px)}}
+.gt{font-size:clamp(64px,11vw,120px);line-height:.8;color:var(--c);text-shadow:0 0 24px rgba(95,245,228,.6);letter-spacing:.04em}
+.gsub{margin:0 0 10px;color:var(--t2);font-size:17px}
+.bootb{height:58px;padding:0 30px;font-size:17px;gap:12px;box-shadow:0 0 0 0 rgba(95,245,228,.5);animation:ring 2.4s ease-out infinite}
+.bootb .pl{width:0;height:0;border-left:12px solid #03221f;border-top:8px solid transparent;border-bottom:8px solid transparent}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(95,245,228,.45)}70%,100%{box-shadow:0 0 0 22px rgba(95,245,228,0)}}
+.glink{background:none;border:0;color:var(--t3);font:500 14px IN;cursor:pointer;text-decoration:underline;text-underline-offset:4px}.glink:hover{color:var(--t)}
+.ghint{margin:6px 0 0;font-size:12px;color:var(--t3);letter-spacing:.08em}
+#intro .skip{opacity:0;transition:opacity .6s}#intro.run .skip{opacity:1}
+#intro .iline{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c);transform-origin:left;transform:scaleX(0);box-shadow:0 0 12px var(--c);z-index:2}
+#intro.run .iline{animation:iline 11.6s linear forwards}@keyframes iline{to{transform:scaleX(1)}}
+
+/* the transparent PC in the nav and the hero */
+.brand img{width:40px;height:auto;filter:drop-shadow(0 0 10px rgba(95,245,228,.25));transition:transform .4s var(--ease)}.brand:hover img{transform:rotate(-6deg) scale(1.08)}
+.pcwrap{aspect-ratio:1/1;border-radius:0;overflow:visible;box-shadow:none;background:none}
+.pcwrap canvas{z-index:1}
+.pcglow{position:absolute;left:8%;right:8%;top:6%;bottom:14%;border-radius:50%;background:radial-gradient(circle,rgba(95,245,228,.30),rgba(47,185,173,.08) 45%,rgba(0,0,0,0) 70%);filter:blur(10px);animation:glowp 6s ease-in-out infinite}
+@keyframes glowp{50%{transform:scale(1.08);opacity:.75}}
+.pcring{position:absolute;left:50%;bottom:9%;width:78%;aspect-ratio:3.2/1;transform:translateX(-50%);border-radius:50%;box-shadow:0 0 0 1px rgba(95,245,228,.35),0 0 40px rgba(95,245,228,.18),inset 0 0 30px rgba(95,245,228,.12);background:repeating-radial-gradient(ellipse,rgba(95,245,228,.06) 0 2px,transparent 2px 14px);animation:ringp 4s ease-in-out infinite}
+.pcring::after{content:'';position:absolute;inset:-14%;border-radius:50%;box-shadow:0 0 0 1px rgba(95,245,228,.16);animation:ringo 4s ease-out infinite}
+@keyframes ringp{50%{box-shadow:0 0 0 1px rgba(95,245,228,.55),0 0 60px rgba(95,245,228,.28),inset 0 0 30px rgba(95,245,228,.2)}}
+@keyframes ringo{from{transform:scale(.85);opacity:1}to{transform:scale(1.25);opacity:0}}
+.pctag{left:50%;transform:translateX(-50%);bottom:0;z-index:2;white-space:nowrap}
+.pcwrap.nogl{background:url(/assets/pc.png) center 40%/62% no-repeat}
+
+/* big letters at the start of every section */
+.bigk{position:relative;display:flex;align-items:flex-start;gap:14px;margin:0 0 6px;line-height:.78;pointer-events:none;user-select:none}
+.bigk .bw{font:400 clamp(84px,14vw,210px)/.78 VT,monospace;letter-spacing:.02em;text-transform:uppercase;color:transparent;background:linear-gradient(180deg,#bffcf4 0%,var(--c) 45%,#1f8f86 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 22px rgba(95,245,228,.28));will-change:transform}
+.bigk::before{content:attr(data-n);order:2;font:600 13px JB;color:var(--c);letter-spacing:.12em;padding:10px 10px 0 0;opacity:.85}
+.bigk::after{content:'';position:absolute;left:0;bottom:-10px;height:2px;width:min(220px,40%);background:linear-gradient(90deg,var(--c),transparent);transform-origin:left;transform:scaleX(0);transition:transform 1.1s var(--ease) .25s}
+.bigk.in::after{transform:scaleX(1)}
+.bigk .bw .ch{display:inline-block;opacity:0;transform:translateY(.25em);transition:opacity .35s,transform .6s var(--ease)}
+.bigk.in .bw .ch{opacity:1;transform:none}
+.bigk+h2{margin-top:26px}
+.steps .bigk{margin-bottom:10px}
+
+/* big outline text that scrolls with you */
+.mq{position:relative;z-index:2;overflow:hidden;padding:26px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(95,245,228,.02)}
+.mqi{display:inline-block;white-space:nowrap;font:400 clamp(46px,7vw,96px)/1 VT,monospace;text-transform:uppercase;color:transparent;-webkit-text-stroke:1.2px rgba(95,245,228,.55);will-change:transform}
+.mqi b{color:var(--c);-webkit-text-stroke:0;font-weight:400;padding:0 .3em;text-shadow:0 0 18px rgba(95,245,228,.6)}
+
+/* a light that follows the cursor across cards and windows */
+.dcard,.win,.padcard,.step,.faq details{--mx:50%;--my:50%}
+.dcard::after,.win::after,.padcard::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(420px circle at var(--mx) var(--my),rgba(95,245,228,.10),transparent 45%);z-index:0}
+.dcard:hover::after,.win:hover::after,.padcard:hover::after{opacity:1}
+.dcard,.padcard{position:relative}
+.dcard li{opacity:0;transform:translateX(-12px);transition:opacity .5s,transform .6s var(--ease)}
+.dcard.in li{opacity:1;transform:none}.dcard.in li:nth-child(2){transition-delay:.08s}.dcard.in li:nth-child(3){transition-delay:.16s}.dcard.in li:nth-child(4){transition-delay:.24s}
+.dcard:hover{box-shadow:inset 0 0 0 1px var(--line2),0 30px 60px -30px rgba(0,0,0,.7)}
+
+/* windows open like a CRT turning on */
+.win.rv{clip-path:inset(48% 0 48% 0 round 18px);transition:opacity .6s var(--ease),transform .8s var(--ease),clip-path 1s var(--ease)}
+.win.rv.in{clip-path:inset(0 0 0 0 round 18px)}
+.win .wbar i{transition:background .3s}.win.in .wbar i:nth-child(1){animation:dot .5s .5s both}.win.in .wbar i:nth-child(2){animation:dot .5s .62s both}.win.in .wbar i:nth-child(3){animation:dot .5s .74s both}
+@keyframes dot{50%{background:var(--c);box-shadow:0 0 10px var(--c)}}
+
+/* the essay lights up word by word as you scroll */
+.essay .wd{color:rgba(169,216,210,.22);transition:color .4s}.essay .wd.lit{color:var(--t2)}
+
+/* buttons: a sheen runs across on hover */
+.btn{position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-18deg);transition:left .7s var(--ease);pointer-events:none}
+.btn:hover::after{left:130%}
+.btn.ghost::after{background:linear-gradient(100deg,transparent,rgba(95,245,228,.25),transparent)}
+
+/* faq answers slide open */
+.faq details p{animation:none}.faq details[open] p{animation:fq .45s var(--ease)}@keyframes fq{from{opacity:0;transform:translateY(-8px)}}
+
+/* the sound button */
+#snd{position:fixed;left:22px;bottom:22px;z-index:81;width:52px;height:52px;border-radius:16px;border:0;background:rgba(3,22,29,.9);box-shadow:inset 0 0 0 1.5px var(--line2),0 10px 30px rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:0 0 16px;cursor:pointer;transition:box-shadow .3s,transform .3s var(--ease)}
+#snd:hover{box-shadow:inset 0 0 0 1.5px var(--c),0 0 26px rgba(95,245,228,.35);transform:translateY(-2px)}
+#snd i{display:block;width:4px;height:18px;border-radius:2px;background:var(--c);transform-origin:bottom;animation:eq 1.1s ease-in-out infinite}
+#snd i:nth-child(2){animation-delay:-.3s}#snd i:nth-child(3){animation-delay:-.6s}#snd i:nth-child(4){animation-delay:-.85s}
+@keyframes eq{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+#snd.off i{animation:none;transform:scaleY(.2);background:var(--t3)}
+body.booting #snd{opacity:0;pointer-events:none}
+
+/* the hero headline: a slow light sweep through "p4d." */
+.hl h1 em{background:linear-gradient(100deg,var(--c) 0%,var(--c) 40%,#e9fffb 50%,var(--c) 60%,var(--c) 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 5s ease-in-out 2s infinite}
+@keyframes sheen{0%{background-position:100% 0}60%,100%{background-position:-50% 0}}
+
+@media (max-width:900px){.bigk .bw{font-size:clamp(72px,22vw,120px)}.mq{padding:18px 0}#snd{left:16px;bottom:16px;width:46px;height:46px;padding-bottom:13px}.pctag{display:none}}
+@media (prefers-reduced-motion:reduce){.win.rv{clip-path:none}.essay .wd{color:var(--t2)}}
