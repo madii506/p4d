@@ -1,3 +1,219 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>p4d</title>
-<style>html,body{margin:0;height:100%;background:#030f11;color:#5ff5e4;font:500 18px ui-monospace,monospace;display:grid;place-items:center}</style></head>
-<body><div>p4d · installing your pad…</div></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>p4d</title>
+<meta name="description" content="get your own p4d. make your own launchpad on Raydium LaunchLab: your name, your logo, your fee on every coin launched through it.">
+<meta property="og:title" content="p4d">
+<meta property="og:description" content="make your own launchpad on Raydium.">
+<meta property="og:image" content="https://p4d-eight.vercel.app/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/assets/favicon.png"><link rel="apple-touch-icon" href="/assets/icon.png">
+<link rel="preload" href="/assets/f/interd-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v=1">
+</head>
+<body class="booting">
+
+<!-- intro: a floppy goes in, the CRT boots p4d, the camera dives into the screen -->
+<div id="intro" aria-hidden="true"><canvas id="introC"></canvas><div class="iflash"></div><button class="skip" type="button" id="skip">skip ›</button></div>
+
+<!-- the studio behind every section -->
+<div id="bg" aria-hidden="true"><div class="halo"></div><div class="floor"><div class="grid"></div></div><canvas id="dust"></canvas><div class="spot" id="spot"></div><div class="vig"></div></div>
+
+<div id="prog"></div>
+<header id="nav">
+  <a class="brand" href="#top"><span class="px">p4d</span></a>
+  <nav><a href="#why">why</a><a href="#how">how</a><a href="#build">build</a><a href="#earn">earn</a><a href="#launch">launch</a><a href="#mine">my pad</a><a href="#pads">pads</a><a href="#term">terminal</a></nav>
+  <a class="btn sm" href="#build">create your pad</a>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hgrid">
+      <div class="hl">
+        <div class="chip"><span class="dot"></span>built on Raydium LaunchLab</div>
+        <h1>get your own <em>p4d.</em></h1>
+        <p class="lead">make your own launchpad on Raydium. your name, your logo, your fee on every coin launched through it. one transaction from your wallet, live on Raydium LaunchLab.</p>
+        <div class="ctas"><a class="btn" href="#build">create your pad</a><a class="btn ghost" href="#how">how it works</a></div>
+        <div class="hstats"><div><small>SOL</small><b id="sSol">—</b></div><div><small>LaunchLab pads</small><b id="sPads">—</b></div><div><small>p4d pads</small><b id="sMine">—</b></div></div>
+      </div>
+      <div class="hr"><div class="pcwrap"><canvas id="heroC"></canvas><div class="pctag mono">your pad, live on the CRT · type below</div></div></div>
+    </div>
+    <a class="down" href="#why" aria-label="scroll"><span></span></a>
+  </section>
+
+  <div class="ticker" aria-hidden="true"><div class="tk" id="tk"></div></div>
+
+  <section id="why" class="band">
+    <div class="wrap">
+      <p class="kicker rv">why</p>
+      <h2 class="rv">every launchpad is just a config.</h2>
+      <div class="essay">
+        <p class="rv">on Raydium, a launchpad isn't a company or a server. it's a small on-chain account inside LaunchLab, Raydium's launch program. it holds a name, a website, a logo, a fee and a rule for what happens to the liquidity when a coin graduates. every coin launched through it trades on a LaunchLab curve and graduates into a Raydium pool.</p>
+        <p class="rv">thousands of these platforms already exist. the big ones are just the ones with a crowd. the account itself costs almost nothing to make, anyone can make one, and the owner earns its fee on every trade of every coin launched through it.</p>
+        <p class="rv">p4d makes that one click. pick a name and a look, set your fee and your liquidity rule, sign one transaction, and you have a real launchpad on Raydium with its own page. share the link. when people launch on it, the fees are yours to claim.</p>
+      </div>
+      <div class="duo">
+        <div class="dcard rv"><span class="tagc">your pad gets</span><h3>everything a launchpad has.</h3><ul><li>its own name, logo and website, stored on-chain</li><li>its own fee on every curve trade, from 0% to 5%</li><li>its own rule for the LP when a coin graduates</li><li>its own launch page anyone can use</li></ul></div>
+        <div class="dcard rv"><span class="tagc">your coins get</span><h3>Raydium the whole way.</h3><ul><li>a LaunchLab bonding curve from the first trade</li><li>graduation into a Raydium CPMM pool</li><li>tradable on raydium.io under their mint address</li><li>no presale, no team allocation, no lockups</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="how">
+    <div class="wrap hw">
+      <div class="stick"><div class="win steps-win"><div class="wbar"><i></i><i></i><i></i><span>p4d://setup.exe</span></div><div class="sw" id="sw"></div></div><div class="stepnum"><b id="stepN">01</b><span>/ 04</span></div></div>
+      <div class="steps">
+        <p class="kicker">how it works</p>
+        <article class="step" data-i="0"><span>01</span><h3>name your pad</h3><p>pick a name, a logo and a website. they're written into your pad's account on Raydium LaunchLab, so every wallet and explorer that reads LaunchLab sees your brand.</p></article>
+        <article class="step" data-i="1"><span>02</span><h3>set your fee</h3><p>choose your pad's fee on every curve trade, anywhere from 0% to 5%, plus an optional creator fee up to 0.5%. LaunchLab's own 0.25% protocol fee stays the same on every pad.</p></article>
+        <article class="step" data-i="2"><span>03</span><h3>pick the LP rule</h3><p>when a coin on your pad fills its curve, it graduates into a Raydium CPMM pool. you choose how much of that LP is burned forever and how much your pad keeps as a Raydium fee key that keeps earning the pool's trading fees.</p></article>
+        <article class="step" data-i="3"><span>04</span><h3>share your link</h3><p>sign one transaction and your pad is live. you get a launch page at your own p4d link. every coin launched there pays your pad's fee, and you claim it from your dashboard.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="build" class="band alt">
+    <div class="wrap">
+      <p class="kicker rv">build</p>
+      <h2 class="rv">create your pad on Raydium.</h2>
+      <div class="bgrid">
+        <form class="win wiz rv" id="wiz" autocomplete="off">
+          <div class="wbar"><i></i><i></i><i></i><span>p4d://setup.exe · new launchpad</span></div>
+          <div class="wtabs" id="wtabs"><button type="button" data-s="0" class="on">1 · name</button><button type="button" data-s="1">2 · fees</button><button type="button" data-s="2">3 · LP</button><button type="button" data-s="3">4 · create</button></div>
+          <div class="wpages">
+            <div class="wp on" data-s="0">
+              <label>pad name<input name="name" maxlength="32" placeholder="my pad" required></label>
+              <label>logo link <small>a direct link to a square png or jpg</small><input name="img" type="url" placeholder="https://…/logo.png"></label>
+              <label>website <small>optional</small><input name="web" type="url" placeholder="https://mypad.xyz"></label>
+            </div>
+            <div class="wp" data-s="1">
+              <label>pad fee per trade <b id="vFee">1.00%</b></label><input type="range" id="fee" min="0" max="5" step="0.05" value="1">
+              <label>creator fee per trade <b id="vCfee">0.05%</b></label><input type="range" id="cfee" min="0" max="0.5" step="0.01" value="0.05">
+              <p class="hint">every trade on a coin launched through your pad pays your pad fee, the creator fee and LaunchLab's 0.25% protocol fee. a lower total fee is easier to sell to launchers.</p>
+            </div>
+            <div class="wp" data-s="2">
+              <label>LP burned at graduation <b id="vBurn">100%</b></label><input type="range" id="burn" min="0" max="100" step="5" value="100">
+              <div class="split"><div class="sb"><i id="sBurn"></i><i id="sKeep"></i></div><div class="sl"><span>burned forever · <b id="lBurn">100%</b></span><span>kept by your pad · <b id="lKeep">0%</b></span></div></div>
+              <p class="hint">LaunchLab only lets a pad split the graduation LP between burned and kept by the pad. the part you keep arrives as a Raydium fee key: the liquidity stays locked, the trading fees keep coming to you.</p>
+            </div>
+            <div class="wp" data-s="3">
+              <div class="review" id="review"></div>
+              <div class="wl"><button type="button" class="btn ghost" id="wBtn">connect wallet</button><span class="mono" id="wAddr"></span></div>
+              <button type="submit" class="btn wide" id="mkBtn" disabled>connect a wallet to create</button>
+              <div class="lstat" id="mkStat" role="status"></div>
+            </div>
+          </div>
+          <div class="wnav"><button type="button" class="btn ghost sm" id="wPrev">back</button><button type="button" class="btn sm" id="wNext">next</button></div>
+        </form>
+        <div class="pv rv">
+          <div class="padcard" id="padcard"></div>
+          <p class="pnote">this is what your pad looks like on its launch page. the 3D PC up top shows it too.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="earn" class="band">
+    <div class="wrap">
+      <p class="kicker rv">earn</p>
+      <h2 class="rv">what a pad can make.</h2>
+      <div class="win rv"><div class="wbar"><i></i><i></i><i></i><span>p4d://earnings.xls</span></div>
+        <div class="calc">
+          <div class="ctrl">
+            <label>daily volume on your pad's coins <b id="vVol">—</b></label><input type="range" id="vol" min="0" max="1000" step="1" value="420">
+            <label>your pad fee <b id="vFee2">1.00%</b></label><input type="range" id="fee2" min="0" max="5" step="0.05" value="1">
+          </div>
+          <div class="earn">
+            <div><small>per day</small><b id="eDay">—</b></div><div><small>per month</small><b id="eMonth">—</b></div><div><small>per year</small><b id="eYear">—</b></div>
+            <p class="note">your pad fee × the curve volume of coins launched through your pad. it's only what the fee rate implies, not a promise: most pads earn nothing until people launch on them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="launch" class="band alt">
+    <div class="wrap">
+      <p class="kicker rv">launch</p>
+      <h2 class="rv">launch a coin on any pad.</h2>
+      <div class="lgrid">
+        <form class="win lform rv" id="lform" autocomplete="off">
+          <div class="wbar"><i></i><i></i><i></i><span>p4d://launch.exe</span></div>
+          <label>pad <small>a pad address, or open someone's p4d link</small><input name="pad" id="lPad" placeholder="pad address" required></label>
+          <div class="two"><label>coin name<input name="name" maxlength="32" placeholder="my coin" required></label><label>ticker<input name="symbol" maxlength="10" placeholder="COIN" required></label></div>
+          <label>image link<input name="image" type="url" placeholder="https://…/coin.png" required></label>
+          <label>raise target <small>the SOL the curve raises before it graduates into Raydium</small>
+            <div class="seg" id="raise"><button type="button" data-v="24">24 SOL</button><button type="button" data-v="85" class="on">85 SOL</button><button type="button" data-v="200">200 SOL</button><button type="button" data-v="500">500 SOL</button></div></label>
+          <label>first buy <small>optional, in SOL, in the same transaction</small><input name="buy" type="number" min="0" step="0.01" value="0"></label>
+          <div class="wl"><button type="button" class="btn ghost" id="wBtn2">connect wallet</button><span class="mono" id="wAddr2"></span></div>
+          <button type="submit" class="btn wide" id="lBtn" disabled>connect a wallet to launch</button>
+          <div class="lstat" id="lStat" role="status"></div>
+        </form>
+        <div class="pv rv"><div class="padcard" id="lPadCard"><div class="empty">paste a pad address or open a p4d link.</div></div><div class="ccoins" id="lCoins"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mine" class="band">
+    <div class="wrap">
+      <p class="kicker rv">my pad</p>
+      <h2 class="rv">your pad, your fees.</h2>
+      <div class="win rv dash" id="dash"><div class="wbar"><i></i><i></i><i></i><span>p4d://dashboard</span></div><div class="dbody" id="dbody"><div class="empty">connect your wallet to see your pad. <button type="button" class="btn sm" id="wBtn3">connect wallet</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="pads" class="band alt">
+    <div class="wrap">
+      <p class="kicker rv">pads</p>
+      <h2 class="rv">every pad made on p4d.</h2>
+      <p class="sub rv"><span id="pTotalL" hidden><b id="pTotal"></b> launchpads exist on Raydium LaunchLab. </span>these are the ones made here.</p>
+      <div class="pgrid" id="pgrid"><div class="empty">reading the chain…</div></div>
+    </div>
+  </section>
+
+  <section id="term" class="band">
+    <div class="wrap">
+      <p class="kicker rv">terminal</p>
+      <h2 class="rv">drive it from the keyboard.</h2>
+      <p class="sub rv">type <code>help</code>, or press <code>/</code> anywhere to pop it open.</p>
+      <div class="tslot"><div class="win term rv" id="termWin"><div class="wbar"><i></i><i></i><i></i><span>p4d@raydium:~</span><button type="button" class="tpop" id="tPop" title="pop out">⤢</button></div><div class="tout" id="tOut"></div><form class="tin" id="tIn" autocomplete="off"><span class="tps">C:\P4D&gt;</span><input id="tCmd" spellcheck="false" autocapitalize="off" placeholder="type help" aria-label="terminal"></form></div></div>
+      <div class="tchips rv" id="tChips"></div>
+    </div>
+  </section>
+
+  <section id="faq" class="band alt">
+    <div class="wrap narrow">
+      <p class="kicker rv">faq</p>
+      <h2 class="rv">questions.</h2>
+      <div class="faq">
+        <details class="rv"><summary>is my pad a real Raydium launchpad?</summary><p>yes. it's a platform account in Raydium LaunchLab, the same kind every launchpad on LaunchLab uses. coins launched through it trade on LaunchLab's curve and graduate into a Raydium CPMM pool. p4d is independent and isn't affiliated with Raydium.</p></details>
+        <details class="rv"><summary>what does it cost to make one?</summary><p>just Solana's account rent and network fee for one transaction, paid from your wallet. p4d takes nothing.</p></details>
+        <details class="rv"><summary>how do I earn?</summary><p>your pad fee is charged on every curve trade of every coin launched through your pad. it collects in your pad's fee vault on LaunchLab, and you claim it to your wallet from the dashboard. if you keep part of the graduation LP, its fee key keeps collecting the Raydium pool's fees too.</p></details>
+        <details class="rv"><summary>what are the limits?</summary><p>a pad fee from 0% to 5% per trade, a creator fee from 0% to 0.5%, and the LP at graduation split between burned and kept by your pad. LaunchLab doesn't allow giving the creator a share of the LP. one pad per wallet.</p></details>
+        <details class="rv"><summary>can I change my pad later?</summary><p>LaunchLab lets the pad's admin wallet update the fee wallets, fee rate and LP rule. p4d's editor for that is coming; for now the settings you create with are the ones it keeps.</p></details>
+        <details class="rv"><summary>is it safe?</summary><p>memecoins are a game and most go to zero. p4d only builds the LaunchLab transaction; your wallet signs it. check every transaction before you sign. nothing here is financial advice.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap fgrid"><span class="px brandf">p4d</span><p>make your own launchpad on Raydium. independent, not affiliated with Raydium. not financial advice.</p><a href="#top">back to the top ↑</a></div></footer>
+<button type="button" id="tFab" aria-label="open the terminal">›_</button>
+<div id="toast" role="status"></div>
+<script src="/assets/js/web3.min.js"></script>
+<script src="/assets/js/app.js?v=1"></script>
+<script type="module">
+import { playIntro, heroPC } from '/assets/js/pc3d.js?v=1';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro');
+const reveal = () => { intro.classList.add('open'); document.body.classList.remove('booting'); setTimeout(() => document.body.classList.add('ready'), 300); };
+const done = () => { intro.classList.add('gone'); window.P4D && window.P4D.startHero && window.P4D.startHero(); };
+let hero = null; window.P4D = Object.assign(window.P4D || {}, { startHero: () => { if (hero) return; try { hero = heroPC(document.getElementById('heroC'), () => window.P4D.pad()); } catch (e) { document.querySelector('.pcwrap').classList.add('nogl'); } } });
+await document.fonts.load('40px VT').catch(() => {});
+if (RM || !window.WebGLRenderingContext) { reveal(); done(); }
+else { try { const I = playIntro(document.getElementById('introC'), { onReveal: reveal, onDone: done, live: () => window.P4D.liveLine ? window.P4D.liveLine() : 'Raydium LaunchLab' });
+  const sk = () => I.skip(); document.getElementById('skip').addEventListener('click', sk); addEventListener('keydown', sk, { once: true }); } catch (e) { reveal(); done(); } }
+</script>
+</body>
+</html>
