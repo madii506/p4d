@@ -579,3 +579,12 @@ body.ready .hl h1 em.hwe{opacity:1;transform:none}
   .wtabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.wtabs::-webkit-scrollbar{display:none}.wtabs button{white-space:nowrap;flex:none}
 }
 @media (max-width:900px){.tchips button,.tchips span,.tchips a{min-height:44px}.tpop{min-width:44px;min-height:44px}}
+
+/* no frames around the buttons on the first screen */
+.hero .btn.ghost,.hero .btn.ghost:hover{box-shadow:none;background:transparent;padding:0 10px}
+.hero .btn.ghost::before{content:'→';order:2;transition:transform .3s var(--ease)}.hero .btn.ghost:hover::before{transform:translateX(4px)}
+.hero .btn.ghost:hover{color:var(--c)}
+.hero .btn.ghost::after{display:none}
+#snd,#tFab{background:transparent!important;box-shadow:none!important}
+#snd:hover,#tFab:hover,#tFab.on{background:transparent!important;box-shadow:none!important;filter:drop-shadow(0 0 10px rgba(95,245,228,.6))}
+.down{box-shadow:none}
