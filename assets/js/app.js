@@ -260,6 +260,20 @@ P(`<span class="w">P4D 98</span> <span class="m">· type</span> <span class="c">
   if (HOVER) $$('.dcard, .win, .padcard').forEach(el => el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px'); }, { passive: true }));
 })();
 
+// ---------------------------------------------------------------- v3: headline words, section rail, cursor ring, hero parallax
+(() => {
+  const h1 = $('.hl h1'); if (h1) { let i = 0; const wrap = w => `<span class="hw"><span style="transition-delay:${(i++) * 90}ms">${w}</span></span>`;
+    h1.innerHTML = [...h1.childNodes].map(n => n.nodeType === 3 ? n.textContent.split(/(\s+)/).map(w => /^\s+$/.test(w) || !w ? w : wrap(esc(w))).join('') : n.outerHTML.replace('<em', `<em class="hwe" style="transition-delay:${(i++) * 90}ms"`)).join(''); }
+  const rail = $$('#rail a'); const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const id = e.target.id || 'top'; rail.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + id)); } }), { rootMargin: '-45% 0px -50% 0px' });
+  rail.forEach(a => { const t = $(a.getAttribute('href')); t && rio.observe(t.id === 'top' ? $('.hero') : t); });
+  const cur = $('#cur'); let cx = -100, cy = -100, tx = -100, ty = -100;
+  if (HOVER && cur && !RM) { addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; const t = e.target.closest && e.target.closest('a,button,input,label,summary,.dcard,.padcard'); cur.classList.toggle('big', !!t); }, { passive: true });
+    const loop = () => { requestAnimationFrame(loop); cx += (tx - cx) * .2; cy += (ty - cy) * .2; cur.style.transform = `translate3d(${cx}px,${cy}px,0)`; }; loop(); }
+  const pcw = $('.hero .hr'), hl = $('.hero .hl');
+  if (!RM && pcw) { const par = () => { const y = scrollY, vh = innerHeight; if (y > vh * 1.2) return; const k = y / vh; pcw.style.transform = `translate3d(0,${(y * .18).toFixed(1)}px,0) scale(${(1 - k * .08).toFixed(3)})`; hl && (hl.style.transform = `translate3d(0,${(y * .08).toFixed(1)}px,0)`); hl && (hl.style.opacity = String(Math.max(0, 1 - k * 1.1))); };
+    addEventListener('scroll', par, { passive: true }); par(); }
+})();
+
 // ---------------------------------------------------------------- go
 syncPad(); setStep(0); earn(); how(); loadPads();
 const qp = new URLSearchParams(location.search).get('pad'); if (qp) openPad(qp, false);

@@ -206,8 +206,7 @@ export function heroPC(canvas, getPad) {
     crtBg(g, W, H); g.textAlign = 'left'; g.textBaseline = 'alphabetic';
     g.font = '34px VT, monospace'; g.fillStyle = CD; g.fillText('P4D 98 · ' + (p.mode || 'pad preview'), 60, 70);
     // logo tile
-    g.strokeStyle = C; g.lineWidth = 3; g.strokeRect(60, 110, 200, 200);
-    if (img && img.complete && img.naturalWidth) { try { g.drawImage(img, 63, 113, 194, 194); } catch {} } else { pixelLogo(g, 160, 150, 10, C); }
+    if (img && img.complete && img.naturalWidth) { try { g.save(); g.beginPath(); g.roundRect ? g.roundRect(63, 113, 194, 194, 22) : g.rect(63, 113, 194, 194); g.clip(); g.drawImage(img, 63, 113, 194, 194); g.restore(); } catch {} } else { pixelLogo(g, 160, 150, 10, C); }
     g.font = '64px VT, monospace'; g.fillStyle = '#effffc'; g.shadowColor = C; g.shadowBlur = 12; g.fillText((p.name || 'my pad').slice(0, 18), 290, 170); g.shadowBlur = 0;
     g.font = '34px VT, monospace'; g.fillStyle = CD; g.fillText((p.web || 'your-pad.xyz').replace(/^https?:\/\//, '').slice(0, 30), 292, 215);
     g.fillStyle = C; g.fillText('● live on Raydium LaunchLab', 292, 265);

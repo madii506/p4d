@@ -60,7 +60,7 @@ function schedule() {
 }
 function startMusic() {
   if (timer) return; nextT = ctx.currentTime + .1; step = 0; schedule(); timer = setInterval(schedule, 400);
-  musicBus.gain.cancelScheduledValues(ctx.currentTime); musicBus.gain.setValueAtTime(musicBus.gain.value, ctx.currentTime); musicBus.gain.linearRampToValueAtTime(1, ctx.currentTime + 5);
+  musicBus.gain.cancelScheduledValues(ctx.currentTime); musicBus.gain.setValueAtTime(musicBus.gain.value, ctx.currentTime); musicBus.gain.linearRampToValueAtTime(.62, ctx.currentTime + 5);
 }
 
 // ---------------------------------------------------------------- machine sounds for the intro
@@ -91,9 +91,10 @@ const SFX = {
 
 export const sound = {
   get on() { return on; },
+  get started() { return !!ctx; },
   // call from a click/keypress (browsers only allow audio after one)
   boot(withSound = true) {
-    on = withSound; try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch {}
+    if (ctx) return true; on = withSound; try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch {}
     if (!init()) return false; ctx.resume && ctx.resume();
     master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(0, ctx.currentTime); master.gain.linearRampToValueAtTime(on ? .9 : 0, ctx.currentTime + .4);
     startMusic(); return true;
@@ -106,5 +107,5 @@ export const sound = {
     return on;
   },
   // quieter under the page than during the intro
-  settle() { if (!ctx) return; musicBus.gain.cancelScheduledValues(ctx.currentTime); musicBus.gain.setValueAtTime(musicBus.gain.value, ctx.currentTime); musicBus.gain.linearRampToValueAtTime(.55, ctx.currentTime + 3); },
+  settle() { if (!ctx) return; musicBus.gain.cancelScheduledValues(ctx.currentTime); musicBus.gain.setValueAtTime(musicBus.gain.value, ctx.currentTime); musicBus.gain.linearRampToValueAtTime(.34, ctx.currentTime + 3); },
 };
