@@ -519,3 +519,29 @@ body.booting #snd{opacity:0;pointer-events:none}
 
 @media (max-width:900px){.bigk .bw{font-size:clamp(72px,22vw,120px)}.mq{padding:18px 0}#snd{left:16px;bottom:16px;width:46px;height:46px;padding-bottom:13px}.pctag{display:none}}
 @media (prefers-reduced-motion:reduce){.win.rv{clip-path:none}.essay .wd{color:var(--t2)}}
+
+/* ================================================================ v3: section rail, cursor ring, hero motion */
+#rail{position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:14px;opacity:0;transition:opacity .6s}
+body.ready #rail{opacity:1}
+#rail a{position:relative;display:block;width:12px;height:12px;display:grid;place-items:center;text-decoration:none}
+#rail a i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(95,245,228,.28);transition:all .35s var(--ease)}
+#rail a::after{content:attr(data-l);position:absolute;right:22px;top:50%;transform:translate(6px,-50%);opacity:0;white-space:nowrap;font:500 12px JB;color:var(--c);letter-spacing:.06em;background:rgba(3,22,29,.9);padding:5px 9px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line2);pointer-events:none;transition:all .3s var(--ease)}
+#rail a:hover::after,#rail a.on::after{opacity:1;transform:translate(0,-50%)}
+#rail a:not(:hover):not(.on)::after{opacity:0}
+#rail a.on i{width:10px;height:10px;background:var(--c);box-shadow:0 0 12px var(--c)}
+#rail a:hover i{background:var(--c)}
+#rail a.on:not(:hover)::after{opacity:.0}
+#cur{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(95,245,228,.55);pointer-events:none;z-index:120;opacity:0;transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),opacity .3s,background .3s;will-change:transform}
+body.moved #cur{opacity:1}
+#cur.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(95,245,228,.08)}
+@media (hover:none),(max-width:900px){#cur,#rail{display:none}}
+/* the headline rises word by word after the intro */
+.hl h1 .hw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.hl h1 .hw>span{display:inline-block;transform:translateY(110%);transition:transform 1.1s var(--ease)}
+body.ready .hl h1 .hw>span{transform:none}
+.hl h1{opacity:1!important;transform:none!important;animation:none!important}
+.pcwrap{will-change:transform}
+.hero .hl{will-change:transform}
+.hl h1 em.hwe{display:inline-block;opacity:0;transform:translateY(.5em);transition:opacity 1s var(--ease),transform 1.1s var(--ease)}
+body.ready .hl h1 em.hwe{opacity:1;transform:none}
+.hl h1 em{text-shadow:none;filter:drop-shadow(0 0 26px rgba(95,245,228,.35))}
