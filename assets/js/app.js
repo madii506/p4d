@@ -128,7 +128,13 @@ function roll(sel, to) { const el = $(sel); if (!el) return; const from = +el.da
 
 // ---------------------------------------------------------------- launch on a pad
 const lform = $('#lform'); let raise = 85, curPad = null;
-$$('#raise button').forEach(b => b.addEventListener('click', () => { $$('#raise button').forEach(x => x.classList.toggle('on', x === b)); raise = +b.dataset.v; }));
+$$('#raise button').forEach(b => b.addEventListener('click', () => { $$('#raise button').forEach(x => x.classList.toggle('on', x === b)); raise = +b.dataset.v; coinPrev(); }));
+// the coin you're launching, drawn from the form as you type
+function coinPrev() { const el = $('#cPrev'); if (!el) return; const f = Object.fromEntries(new FormData(lform)); const name = (f.name || '').trim(), sym = (f.symbol || '').trim().toUpperCase(), img = (f.image || '').trim(), pad = (f.pad || '').trim(), buy = +f.buy || 0;
+  const pic = /^https?:\/\//.test(img) ? `<img src="${esc(img)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'cpx',textContent:'?'}))">` : `<span class="cpx">${esc((sym || name || '?').slice(0, 1))}</span>`;
+  el.innerHTML = `<div class="cph">${pic}<div><b>${esc(name || 'your coin')}</b><span>$${esc(sym || 'TICKER')}</span></div><em>${name && sym && img ? 'ready' : 'draft'}</em></div>`
+    + `<div class="cpbar"><i style="width:0%"></i></div><div class="cprow"><span>curve</span><b>0 / ${raise} SOL raised</b></div><div class="cprow"><span>graduates into</span><b>Raydium CPMM</b></div><div class="cprow"><span>first buy</span><b>${buy ? buy + ' SOL' : 'none'}</b></div><div class="cprow"><span>pad</span><b>${pad ? esc(pad.slice(0, 4) + '…' + pad.slice(-4)) : '—'}</b></div>`; }
+lform.addEventListener('input', coinPrev); coinPrev();
 async function openPad(id, scroll) {
   if (!id) return; $('#lPad').value = id; const card = $('#lPadCard'); card.innerHTML = '<div class="empty">reading the pad from LaunchLab…</div>';
   try { const p = await api('pad', null, '&id=' + encodeURIComponent(id)); if (!p.exists) { card.innerHTML = `<div class="empty">no LaunchLab pad at ${esc(short(id))}.</div>`; curPad = null; return; }
@@ -171,17 +177,19 @@ async function loadMine() {
 async function loadPads() {
   const g = $('#pgrid');
   try { const { pads } = await api('pads'); set$('#sMine', pads.length);
-    g.innerHTML = pads.length ? pads.map(p => `<a class="padcard" href="/?pad=${p.id}#launch" data-pad="${p.id}">${padCard(p)}</a>`).join('') : '<div class="empty">no pads made on p4d yet. yours can be the first.</div>';
+    g.innerHTML = pads.length ? pads.map(p => `<a class="padcard" href="/?pad=${p.id}#launch" data-pad="${p.id}">${padCard(p)}</a>`).join('') : slots();
     $$('#pgrid a[data-pad]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); history.replaceState(null, '', '/?pad=' + a.dataset.pad + '#launch'); openPad(a.dataset.pad, true); }));
   } catch (e) { g.innerHTML = `<div class="empty">couldn't read the chain right now (${esc(e.message)}).</div>`; set$('#sMine', '—'); }
 }
+
+const slots = () => Array.from({ length: 6 }, (_, i) => `<a class="slot${i ? '' : ' first'}" href="#build"><img src="/assets/pc.png" alt="" width="64" height="68"><span class="sn">#${String(i + 1).padStart(3, '0')}</span><b>${i ? 'open' : 'yours could be the first'}</b><i>${i ? 'empty slot' : 'create your pad →'}</i></a>`).join('');
 
 // ---------------------------------------------------------------- live status
 const statusP = api('status').then(s => { S.st = s; S.sol = s.solUsd;
   set$('#sSol', s.solUsd ? '$' + s.solUsd.toFixed(2) : '—'); set$('#sPads', s.platforms ? s.platforms.toLocaleString('en-US') : '—'); if (s.platforms) { $('#pTotal').textContent = s.platforms.toLocaleString('en-US'); $('#pTotalL').hidden = false; }
   earn(); review(); ticker(); return s; }).catch(() => { set$('#sPads', 'offline'); return null; });
 function ticker() { const it = [['get your own p4d', ''], ['make a launchpad on Raydium', ''], [S.st && S.st.platforms ? S.st.platforms.toLocaleString('en-US') : 'thousands of', 'LaunchLab pads live'], ['your fee: 0–5% per trade', ''], ['graduates into a Raydium pool', ''], ['one transaction from your wallet', ''], ['type / for the terminal', '']];
-  const h = it.map(([a, b]) => `<span><b>${a}</b>${b ? ` <i>${b}</i>` : ''}</span><span>·</span>`).join(''); $('#tk').innerHTML = h + h; }
+  const tk = $('#tk'); if (!tk) return; const h = it.map(([a, b]) => `<span><b>${a}</b>${b ? ` <i>${b}</i>` : ''}</span><span>·</span>`).join(''); tk.innerHTML = h + h; }
 ticker();
 
 // ---------------------------------------------------------------- terminal

@@ -159,7 +159,8 @@ export function playIntro(canvas, { onReveal, onDone, onCue, live, manual } = {}
     // camera: a slow glide in, a drift while the drive works, a push to the screen for the BIOS, then the dive
     const close = new THREE.Vector3(0, .66, Math.max(1.18, (.72 / Math.max(.3, cam.aspect)) / .611) + screenWorld.z);
     const k1 = eio(seg(t, 0, 3.4)), k3 = eio(seg(t, 4.9, 6.4)), k2 = eio(seg(t, 10.2, 11.3));
-    const p = new THREE.Vector3().lerpVectors(start, mid, k1); p.x += Math.sin(t * .35) * .05 * (1 - k3);
+    const fit = Math.max(1, (2.12 / Math.max(.3, cam.aspect)) / 3.5), st = start.clone().multiplyScalar(fit), md = new THREE.Vector3(mid.x, mid.y, mid.z * fit);
+    const p = new THREE.Vector3().lerpVectors(st, md, k1); p.x += Math.sin(t * .35) * .05 * (1 - k3);
     p.lerp(close, k3); p.y += Math.sin(t * .6) * .006 * (1 - k2);
     const dive = new THREE.Vector3(screenWorld.x, screenWorld.y + .01, screenWorld.z + .16); p.lerp(dive, k2); cam.position.copy(p);
     const look = new THREE.Vector3().lerpVectors(look0, look1, k1).lerp(new THREE.Vector3(0, screenWorld.y - .01, 0), k3).lerp(screenWorld, k2); cam.lookAt(look);
@@ -195,7 +196,7 @@ export function playIntro(canvas, { onReveal, onDone, onCue, live, manual } = {}
 // ---------------------------------------------------------------- the hero: the PC follows the cursor; its CRT shows your pad
 export function heroPC(canvas, getPad) {
   const S = stage(canvas, { clear: true }); const { cam, comp, pc, crtG: g, crtT, floppy, FLOPPY_IN, dust } = S;
-  floppy.position.copy(FLOPPY_IN); cam.position.set(0, 1.02, 3.1); cam.lookAt(0, .42, 0);
+  floppy.position.copy(FLOPPY_IN); cam.position.set(0, .98, 2.45); cam.lookAt(0, .44, 0);
   const W = 1024, H = 768; let tx = 0, ty = 0, cx = 0, cy = 0, visible = true, last = '', img = null, imgSrc = '';
   addEventListener('pointermove', e => { tx = (e.clientX / innerWidth - .5); ty = (e.clientY / innerHeight - .5); }, { passive: true });
   new IntersectionObserver(es => visible = es[0].isIntersecting).observe(canvas);
@@ -217,7 +218,7 @@ export function heroPC(canvas, getPad) {
   }
   let raf = 0; const loop = now => { raf = requestAnimationFrame(loop); if (!visible) return; const t = now / 1000;
     cx += (tx - cx) * .05; cy += (ty - cy) * .05; pc.rotation.y = cx * .55; pc.rotation.x = cy * .06; floppy.rotation.y = pc.rotation.y; floppy.position.set(FLOPPY_IN.x * Math.cos(pc.rotation.y) + FLOPPY_IN.z * Math.sin(pc.rotation.y), FLOPPY_IN.y, FLOPPY_IN.z * Math.cos(pc.rotation.y) - FLOPPY_IN.x * Math.sin(pc.rotation.y));
-    cam.position.set(Math.sin(t * .2) * .06, 1.02 + Math.sin(t * .3) * .02, 3.1); cam.lookAt(0, .42, 0); dust.rotation.y = t * .015;
+    const D = Math.max(2.45, 1.05 / (.611 * Math.max(.4, cam.aspect))); cam.position.set(Math.sin(t * .2) * .06, .98 + Math.sin(t * .3) * .02, D); cam.lookAt(0, .44, 0); dust.rotation.y = t * .015;
     pc.position.y = Math.sin(t * .9) * .012; draw(t); S.render(); };
   raf = requestAnimationFrame(loop);
   return { stop: () => { cancelAnimationFrame(raf); S.dispose(); } };
