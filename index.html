@@ -3,27 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>p4d</title>
+<title>P4D</title>
 <meta name="description" content="get your own p4d. make your own launchpad on Raydium LaunchLab: your name, your logo, your fee on every coin launched through it.">
-<meta property="og:title" content="p4d">
+<meta property="og:title" content="P4D">
 <meta property="og:description" content="make your own launchpad on Raydium.">
 <meta property="og:image" content="https://p4d-eight.vercel.app/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon.png"><link rel="apple-touch-icon" href="/assets/icon.png">
 <link rel="preload" href="/assets/f/interd-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css?v=1">
+<link rel="preload" href="/assets/pc.png" as="image">
+<link rel="stylesheet" href="/assets/style.css?v=2">
 </head>
 <body class="booting">
 
 <!-- intro: a floppy goes in, the CRT boots p4d, the camera dives into the screen -->
-<div id="intro" aria-hidden="true"><canvas id="introC"></canvas><div class="iflash"></div><button class="skip" type="button" id="skip">skip ›</button></div>
+<div id="intro"><canvas id="introC"></canvas><div class="iflash"></div><div class="iline" id="iline"></div>
+  <div class="gate" id="gate"><div class="gin">
+    <img class="gpc" src="/assets/pc.png" alt="" width="220" height="234">
+    <div class="px gt">P4D</div>
+    <p class="gsub">make your own launchpad on Raydium</p>
+    <button class="btn bootb" type="button" id="boot"><span class="pl"></span>boot p4d</button>
+    <button class="glink" type="button" id="bootQ">enter without sound</button>
+    <p class="mono ghint">sound on · press any key</p>
+  </div></div>
+  <button class="skip" type="button" id="skip">skip ›</button></div>
 
 <!-- the studio behind every section -->
 <div id="bg" aria-hidden="true"><div class="halo"></div><div class="floor"><div class="grid"></div></div><canvas id="dust"></canvas><div class="spot" id="spot"></div><div class="vig"></div></div>
 
 <div id="prog"></div>
 <header id="nav">
-  <a class="brand" href="#top"><span class="px">p4d</span></a>
+  <a class="brand" href="#top"><img src="/assets/pc.png" alt="" width="40" height="43"><span class="px">p4d</span></a>
   <nav><a href="#why">why</a><a href="#how">how</a><a href="#build">build</a><a href="#earn">earn</a><a href="#launch">launch</a><a href="#mine">my pad</a><a href="#pads">pads</a><a href="#term">terminal</a></nav>
   <a class="btn sm" href="#build">create your pad</a>
 </header>
@@ -32,13 +42,11 @@
   <section class="hero">
     <div class="wrap hgrid">
       <div class="hl">
-        <div class="chip"><span class="dot"></span>built on Raydium LaunchLab</div>
         <h1>get your own <em>p4d.</em></h1>
         <p class="lead">make your own launchpad on Raydium. your name, your logo, your fee on every coin launched through it. one transaction from your wallet, live on Raydium LaunchLab.</p>
         <div class="ctas"><a class="btn" href="#build">create your pad</a><a class="btn ghost" href="#how">how it works</a></div>
-        <div class="hstats"><div><small>SOL</small><b id="sSol">—</b></div><div><small>LaunchLab pads</small><b id="sPads">—</b></div><div><small>p4d pads</small><b id="sMine">—</b></div></div>
       </div>
-      <div class="hr"><div class="pcwrap"><canvas id="heroC"></canvas><div class="pctag mono">your pad, live on the CRT · type below</div></div></div>
+      <div class="hr"><div class="pcwrap"><div class="pcglow"></div><canvas id="heroC"></canvas><div class="pctag mono">your pad, live on the CRT · move your mouse</div></div></div>
     </div>
     <a class="down" href="#why" aria-label="scroll"><span></span></a>
   </section>
@@ -47,7 +55,7 @@
 
   <section id="why" class="band">
     <div class="wrap">
-      <p class="kicker rv">why</p>
+      <div class="bigk" data-n="01"><span class="bw">why</span></div>
       <h2 class="rv">every launchpad is just a config.</h2>
       <div class="essay">
         <p class="rv">on Raydium, a launchpad isn't a company or a server. it's a small on-chain account inside LaunchLab, Raydium's launch program. it holds a name, a website, a logo, a fee and a rule for what happens to the liquidity when a coin graduates. every coin launched through it trades on a LaunchLab curve and graduates into a Raydium pool.</p>
@@ -65,7 +73,7 @@
     <div class="wrap hw">
       <div class="stick"><div class="win steps-win"><div class="wbar"><i></i><i></i><i></i><span>p4d://setup.exe</span></div><div class="sw" id="sw"></div></div><div class="stepnum"><b id="stepN">01</b><span>/ 04</span></div></div>
       <div class="steps">
-        <p class="kicker">how it works</p>
+        <div class="bigk" data-n="02"><span class="bw">how</span></div>
         <article class="step" data-i="0"><span>01</span><h3>name your pad</h3><p>pick a name, a logo and a website. they're written into your pad's account on Raydium LaunchLab, so every wallet and explorer that reads LaunchLab sees your brand.</p></article>
         <article class="step" data-i="1"><span>02</span><h3>set your fee</h3><p>choose your pad's fee on every curve trade, anywhere from 0% to 5%, plus an optional creator fee up to 0.5%. LaunchLab's own 0.25% protocol fee stays the same on every pad.</p></article>
         <article class="step" data-i="2"><span>03</span><h3>pick the LP rule</h3><p>when a coin on your pad fills its curve, it graduates into a Raydium CPMM pool. you choose how much of that LP is burned forever and how much your pad keeps as a Raydium fee key that keeps earning the pool's trading fees.</p></article>
@@ -74,9 +82,11 @@
     </div>
   </section>
 
+  <div class="mq" aria-hidden="true"><div class="mqi">get your own p4d <b>✦</b> make your own launchpad on Raydium <b>✦</b> your fee on every trade <b>✦</b> </div></div>
+
   <section id="build" class="band alt">
     <div class="wrap">
-      <p class="kicker rv">build</p>
+      <div class="bigk" data-n="03"><span class="bw">build</span></div>
       <h2 class="rv">create your pad on Raydium.</h2>
       <div class="bgrid">
         <form class="win wiz rv" id="wiz" autocomplete="off">
@@ -117,7 +127,7 @@
 
   <section id="earn" class="band">
     <div class="wrap">
-      <p class="kicker rv">earn</p>
+      <div class="bigk" data-n="04"><span class="bw">earn</span></div>
       <h2 class="rv">what a pad can make.</h2>
       <div class="win rv"><div class="wbar"><i></i><i></i><i></i><span>p4d://earnings.xls</span></div>
         <div class="calc">
@@ -136,7 +146,7 @@
 
   <section id="launch" class="band alt">
     <div class="wrap">
-      <p class="kicker rv">launch</p>
+      <div class="bigk" data-n="05"><span class="bw">launch</span></div>
       <h2 class="rv">launch a coin on any pad.</h2>
       <div class="lgrid">
         <form class="win lform rv" id="lform" autocomplete="off">
@@ -156,9 +166,11 @@
     </div>
   </section>
 
+  <div class="mq" aria-hidden="true"><div class="mqi">one transaction <b>✦</b> your name <b>✦</b> your logo <b>✦</b> your fee <b>✦</b> your LP rule <b>✦</b> </div></div>
+
   <section id="mine" class="band">
     <div class="wrap">
-      <p class="kicker rv">my pad</p>
+      <div class="bigk" data-n="06"><span class="bw">my pad</span></div>
       <h2 class="rv">your pad, your fees.</h2>
       <div class="win rv dash" id="dash"><div class="wbar"><i></i><i></i><i></i><span>p4d://dashboard</span></div><div class="dbody" id="dbody"><div class="empty">connect your wallet to see your pad. <button type="button" class="btn sm" id="wBtn3">connect wallet</button></div></div></div>
     </div>
@@ -166,7 +178,7 @@
 
   <section id="pads" class="band alt">
     <div class="wrap">
-      <p class="kicker rv">pads</p>
+      <div class="bigk" data-n="07"><span class="bw">pads</span></div>
       <h2 class="rv">every pad made on p4d.</h2>
       <p class="sub rv"><span id="pTotalL" hidden><b id="pTotal"></b> launchpads exist on Raydium LaunchLab. </span>these are the ones made here.</p>
       <div class="pgrid" id="pgrid"><div class="empty">reading the chain…</div></div>
@@ -175,7 +187,7 @@
 
   <section id="term" class="band">
     <div class="wrap">
-      <p class="kicker rv">terminal</p>
+      <div class="bigk" data-n="08"><span class="bw">terminal</span></div>
       <h2 class="rv">drive it from the keyboard.</h2>
       <p class="sub rv">type <code>help</code>, or press <code>/</code> anywhere to pop it open.</p>
       <div class="tslot"><div class="win term rv" id="termWin"><div class="wbar"><i></i><i></i><i></i><span>p4d@raydium:~</span><button type="button" class="tpop" id="tPop" title="pop out">⤢</button></div><div class="tout" id="tOut"></div><form class="tin" id="tIn" autocomplete="off"><span class="tps">C:\P4D&gt;</span><input id="tCmd" spellcheck="false" autocapitalize="off" placeholder="type help" aria-label="terminal"></form></div></div>
@@ -185,7 +197,7 @@
 
   <section id="faq" class="band alt">
     <div class="wrap narrow">
-      <p class="kicker rv">faq</p>
+      <div class="bigk" data-n="09"><span class="bw">faq</span></div>
       <h2 class="rv">questions.</h2>
       <div class="faq">
         <details class="rv"><summary>is my pad a real Raydium launchpad?</summary><p>yes. it's a platform account in Raydium LaunchLab, the same kind every launchpad on LaunchLab uses. coins launched through it trade on LaunchLab's curve and graduate into a Raydium CPMM pool. p4d is independent and isn't affiliated with Raydium.</p></details>
@@ -193,27 +205,36 @@
         <details class="rv"><summary>how do I earn?</summary><p>your pad fee is charged on every curve trade of every coin launched through your pad. it collects in your pad's fee vault on LaunchLab, and you claim it to your wallet from the dashboard. if you keep part of the graduation LP, its fee key keeps collecting the Raydium pool's fees too.</p></details>
         <details class="rv"><summary>what are the limits?</summary><p>a pad fee from 0% to 5% per trade, a creator fee from 0% to 0.5%, and the LP at graduation split between burned and kept by your pad. LaunchLab doesn't allow giving the creator a share of the LP. one pad per wallet.</p></details>
         <details class="rv"><summary>can I change my pad later?</summary><p>LaunchLab lets the pad's admin wallet update the fee wallets, fee rate and LP rule. p4d's editor for that is coming; for now the settings you create with are the ones it keeps.</p></details>
-        <details class="rv"><summary>is it safe?</summary><p>memecoins are a game and most go to zero. p4d only builds the LaunchLab transaction; your wallet signs it. check every transaction before you sign. nothing here is financial advice.</p></details>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="foot"><div class="wrap fgrid"><span class="px brandf">p4d</span><p>make your own launchpad on Raydium. independent, not affiliated with Raydium. not financial advice.</p><a href="#top">back to the top ↑</a></div></footer>
+<button type="button" id="snd" aria-label="sound on or off" title="sound"><i></i><i></i><i></i><i></i></button>
 <button type="button" id="tFab" aria-label="open the terminal">›_</button>
 <div id="toast" role="status"></div>
 <script src="/assets/js/web3.min.js"></script>
-<script src="/assets/js/app.js?v=1"></script>
+<script src="/assets/js/app.js?v=2"></script>
 <script type="module">
-import { playIntro, heroPC } from '/assets/js/pc3d.js?v=1';
-const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro');
+import { playIntro, heroPC } from '/assets/js/pc3d.js?v=2';
+import { sound } from '/assets/js/sound.js?v=2';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro'), gate = document.getElementById('gate');
 const reveal = () => { intro.classList.add('open'); document.body.classList.remove('booting'); setTimeout(() => document.body.classList.add('ready'), 300); };
-const done = () => { intro.classList.add('gone'); window.P4D && window.P4D.startHero && window.P4D.startHero(); };
-let hero = null; window.P4D = Object.assign(window.P4D || {}, { startHero: () => { if (hero) return; try { hero = heroPC(document.getElementById('heroC'), () => window.P4D.pad()); } catch (e) { document.querySelector('.pcwrap').classList.add('nogl'); } } });
+const done = () => { intro.classList.add('gone'); sound.settle(); window.P4D && window.P4D.startHero && window.P4D.startHero(); };
+let hero = null; window.P4D = Object.assign(window.P4D || {}, { sound, startHero: () => { if (hero) return; try { hero = heroPC(document.getElementById('heroC'), () => window.P4D.pad()); } catch (e) { document.querySelector('.pcwrap').classList.add('nogl'); } } });
 await document.fonts.load('40px VT').catch(() => {});
-if (RM || !window.WebGLRenderingContext) { reveal(); done(); }
-else { try { const I = playIntro(document.getElementById('introC'), { onReveal: reveal, onDone: done, live: () => window.P4D.liveLine ? window.P4D.liveLine() : 'Raydium LaunchLab' });
-  const sk = () => I.skip(); document.getElementById('skip').addEventListener('click', sk); addEventListener('keydown', sk, { once: true }); } catch (e) { reveal(); done(); } }
+const sBtn = document.getElementById('snd'); const paint = () => sBtn.classList.toggle('off', !sound.on); paint();
+sBtn.addEventListener('click', () => { sound.toggle(); paint(); });
+if (RM || !window.WebGLRenderingContext) { gate.remove(); reveal(); done(); }
+else { let I = null; try { I = playIntro(document.getElementById('introC'), { onReveal: reveal, onDone: done, onCue: n => sound.cue(n), live: () => window.P4D.liveLine ? window.P4D.liveLine() : 'Raydium LaunchLab online' }); } catch (e) { gate.remove(); reveal(); done(); }
+  if (I) { let booted = false;
+    const boot = withSound => { if (booted) return; booted = true; sound.boot(withSound); paint(); gate.classList.add('go'); intro.classList.add('run'); setTimeout(() => gate.remove(), 900); setTimeout(() => I.play(), 350);
+      setTimeout(() => addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') I.skip(); }), 800); };
+    document.getElementById('boot').addEventListener('click', () => boot(true));
+    document.getElementById('bootQ').addEventListener('click', e => { e.stopPropagation(); boot(false); });
+    gate.addEventListener('click', e => { if (e.target === gate) boot(true); });
+    addEventListener('keydown', e => { if (!booted && !e.metaKey && !e.ctrlKey) { e.preventDefault(); boot(true); } }, { once: true });
+    document.getElementById('skip').addEventListener('click', () => { if (!booted) boot(false); I.skip(); }); } }
 </script>
 </body>
 </html>
