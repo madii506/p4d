@@ -11,21 +11,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon.png"><link rel="apple-touch-icon" href="/assets/icon.png">
 <link rel="preload" href="/assets/f/interd-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/pc.png" as="image">
-<link rel="stylesheet" href="/assets/style.css?v=2">
+<link rel="stylesheet" href="/assets/style.css?v=3">
 </head>
 <body class="booting">
 
 <!-- intro: a floppy goes in, the CRT boots p4d, the camera dives into the screen -->
 <div id="intro"><canvas id="introC"></canvas><div class="iflash"></div><div class="iline" id="iline"></div>
-  <div class="gate" id="gate"><div class="gin">
-    <img class="gpc" src="/assets/pc.png" alt="" width="220" height="234">
-    <div class="px gt">P4D</div>
-    <p class="gsub">make your own launchpad on Raydium</p>
-    <button class="btn bootb" type="button" id="boot"><span class="pl"></span>boot p4d</button>
-    <button class="glink" type="button" id="bootQ">enter without sound</button>
-    <p class="mono ghint">sound on · press any key</p>
-  </div></div>
   <button class="skip" type="button" id="skip">skip ›</button></div>
 
 <!-- the studio behind every section -->
@@ -46,7 +37,7 @@
         <p class="lead">make your own launchpad on Raydium. your name, your logo, your fee on every coin launched through it. one transaction from your wallet, live on Raydium LaunchLab.</p>
         <div class="ctas"><a class="btn" href="#build">create your pad</a><a class="btn ghost" href="#how">how it works</a></div>
       </div>
-      <div class="hr"><div class="pcwrap"><div class="pcglow"></div><canvas id="heroC"></canvas><div class="pctag mono">your pad, live on the CRT · move your mouse</div></div></div>
+      <div class="hr"><div class="pcwrap"><div class="pcglow"></div><canvas id="heroC"></canvas></div></div>
     </div>
     <a class="down" href="#why" aria-label="scroll"><span></span></a>
   </section>
@@ -213,28 +204,28 @@
 <button type="button" id="snd" aria-label="sound on or off" title="sound"><i></i><i></i><i></i><i></i></button>
 <button type="button" id="tFab" aria-label="open the terminal">›_</button>
 <div id="toast" role="status"></div>
+<nav id="rail" aria-label="sections"><a href="#top" data-l="top"><i></i></a><a href="#why" data-l="why"><i></i></a><a href="#how" data-l="how"><i></i></a><a href="#build" data-l="build"><i></i></a><a href="#earn" data-l="earn"><i></i></a><a href="#launch" data-l="launch"><i></i></a><a href="#mine" data-l="my pad"><i></i></a><a href="#pads" data-l="pads"><i></i></a><a href="#term" data-l="terminal"><i></i></a><a href="#faq" data-l="faq"><i></i></a></nav>
+<div id="cur" aria-hidden="true"></div>
 <script src="/assets/js/web3.min.js"></script>
-<script src="/assets/js/app.js?v=2"></script>
+<script src="/assets/js/app.js?v=3"></script>
 <script type="module">
-import { playIntro, heroPC } from '/assets/js/pc3d.js?v=2';
-import { sound } from '/assets/js/sound.js?v=2';
-const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro'), gate = document.getElementById('gate');
+import { playIntro, heroPC } from '/assets/js/pc3d.js?v=3';
+import { sound } from '/assets/js/sound.js?v=3';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro');
 const reveal = () => { intro.classList.add('open'); document.body.classList.remove('booting'); setTimeout(() => document.body.classList.add('ready'), 300); };
 const done = () => { intro.classList.add('gone'); sound.settle(); window.P4D && window.P4D.startHero && window.P4D.startHero(); };
 let hero = null; window.P4D = Object.assign(window.P4D || {}, { sound, startHero: () => { if (hero) return; try { hero = heroPC(document.getElementById('heroC'), () => window.P4D.pad()); } catch (e) { document.querySelector('.pcwrap').classList.add('nogl'); } } });
+// sound: browsers only allow audio after a click, tap or key, so the music starts on the first one (unless it was muted before)
+const sBtn = document.getElementById('snd'); const paint = () => sBtn.classList.toggle('off', !(sound.started && sound.on)); paint();
+sBtn.addEventListener('click', () => { if (!sound.started) sound.boot(true); else sound.toggle(); paint(); });
+const unlock = e => { if (e.target && e.target.closest && e.target.closest('#snd')) return; if (!sound.started && sound.on) { sound.boot(true); paint(); } };
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, unlock, { passive: true }));
 await document.fonts.load('40px VT').catch(() => {});
-const sBtn = document.getElementById('snd'); const paint = () => sBtn.classList.toggle('off', !sound.on); paint();
-sBtn.addEventListener('click', () => { sound.toggle(); paint(); });
-if (RM || !window.WebGLRenderingContext) { gate.remove(); reveal(); done(); }
-else { let I = null; try { I = playIntro(document.getElementById('introC'), { onReveal: reveal, onDone: done, onCue: n => sound.cue(n), live: () => window.P4D.liveLine ? window.P4D.liveLine() : 'Raydium LaunchLab online' }); } catch (e) { gate.remove(); reveal(); done(); }
-  if (I) { let booted = false;
-    const boot = withSound => { if (booted) return; booted = true; sound.boot(withSound); paint(); gate.classList.add('go'); intro.classList.add('run'); setTimeout(() => gate.remove(), 900); setTimeout(() => I.play(), 350);
-      setTimeout(() => addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') I.skip(); }), 800); };
-    document.getElementById('boot').addEventListener('click', () => boot(true));
-    document.getElementById('bootQ').addEventListener('click', e => { e.stopPropagation(); boot(false); });
-    gate.addEventListener('click', e => { if (e.target === gate) boot(true); });
-    addEventListener('keydown', e => { if (!booted && !e.metaKey && !e.ctrlKey) { e.preventDefault(); boot(true); } }, { once: true });
-    document.getElementById('skip').addEventListener('click', () => { if (!booted) boot(false); I.skip(); }); } }
+if (RM || !window.WebGLRenderingContext) { reveal(); done(); }
+else { let I = null; try { I = playIntro(document.getElementById('introC'), { onReveal: reveal, onDone: done, onCue: n => sound.cue(n), live: () => window.P4D.liveLine ? window.P4D.liveLine() : 'Raydium LaunchLab online' }); } catch (e) { reveal(); done(); }
+  if (I) { intro.classList.add('run'); I.play();
+    document.getElementById('skip').addEventListener('click', () => I.skip());
+    addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') I.skip(); }); } }
 </script>
 </body>
 </html>
