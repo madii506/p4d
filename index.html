@@ -13,13 +13,12 @@
 <link rel="preload" href="/assets/f/interd-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/f/vt323.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="/assets/js/pc3d.js?v=4"><link rel="modulepreload" href="/assets/js/vendor/three.module.min.js"><link rel="modulepreload" href="/assets/js/sound.js?v=4">
-<link rel="stylesheet" href="/assets/style.css?v=4">
+<link rel="stylesheet" href="/assets/style.css?v=5">
 </head>
 <body class="booting">
 
 <!-- intro: a floppy goes in, the CRT boots p4d, the camera dives into the screen -->
-<div id="intro"><canvas id="introC"></canvas><div class="iflash"></div><div class="iline" id="iline"></div>
-  <button class="skip" type="button" id="skip">skip ›</button></div>
+<div id="intro"><canvas id="introC"></canvas><div class="iflash"></div><div class="iline" id="iline"></div></div>
 
 <!-- the studio behind every section -->
 <div id="bg" aria-hidden="true"><div class="halo"></div><div class="floor"><div class="grid"></div></div><canvas id="dust"></canvas><div class="spot" id="spot"></div><div class="vig"></div></div>
@@ -213,7 +212,7 @@ import { sound } from '/assets/js/sound.js?v=4';
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, intro = document.getElementById('intro');
 const reveal = () => { intro.classList.add('open'); document.body.classList.remove('booting'); setTimeout(() => document.body.classList.add('ready'), 300); };
 const done = () => { intro.classList.add('gone'); sound.settle(); window.P4D && window.P4D.startHero && window.P4D.startHero(); };
-let hero = null; window.P4D = Object.assign(window.P4D || {}, { sound, startHero: () => { if (hero) return; try { hero = heroPC(document.getElementById('heroC'), () => window.P4D.pad()); } catch (e) { document.querySelector('.pcwrap').classList.add('nogl'); } } });
+let hero = null; window.P4D = Object.assign(window.P4D || {}, { sound, startHero: () => { if (hero) return; try { hero = heroPC(document.getElementById('heroC'), () => (window.P4D.pad ? window.P4D.pad() : {})); } catch (e) { document.querySelector('.pcwrap').classList.add('nogl'); } } });
 // sound: browsers only allow audio after a click, tap or key, so the music starts on the first one (unless it was muted before)
 const sBtn = document.getElementById('snd'); const paint = () => sBtn.classList.toggle('off', !(sound.started && sound.on)); paint();
 sBtn.addEventListener('click', () => { if (!sound.started) sound.boot(true); else sound.toggle(); paint(); });
@@ -223,7 +222,6 @@ await document.fonts.load('40px VT').catch(() => {});
 if (RM || !window.WebGLRenderingContext) { reveal(); done(); }
 else { let I = null; try { I = playIntro(document.getElementById('introC'), { onReveal: reveal, onDone: done, onCue: n => sound.cue(n), live: () => window.P4D.liveLine ? window.P4D.liveLine() : 'Raydium LaunchLab online' }); } catch (e) { reveal(); done(); }
   if (I) { intro.classList.add('run'); I.play();
-    document.getElementById('skip').addEventListener('click', () => I.skip());
     addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') I.skip(); }); } }
 </script>
 <script src="/assets/js/web3.min.js" defer></script>
